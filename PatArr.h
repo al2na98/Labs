@@ -10,7 +10,7 @@ class PatArr {
 private:
     B* a; // Указатель на массив элементов типа B
     int n; // Размер массива
-    void ShiftLeft(int pos);
+
 
 public:
     // Конструкторы
@@ -343,33 +343,31 @@ bool PatArr<B>::operator!=(PatArr<B> x) const {
     return !(*this == x);
 }
 
+
 template<class B>
 int PatArr<B>::Max() {
-    // Инициализируем переменные для хранения индекса максимального значения
-    int c = 0, tmp = 0;
-    if (a.empty()) throw std::runtime_error("Массив пуст");
-    for (int i = 0; i < n; i++) {
-        // Находим максимальный элемент и его индекс
-        if (a[i] > tmp) {
-            tmp = a[i];
-            c = i;
+    if (n == 0) throw std::runtime_error("Массив пуст"); // Проверяем, не пуст ли массив
+
+    B maxVal = a[0]; // Инициализируем максимальное значение первым элементом
+    for (int i = 1; i < n; i++) {
+        if (a[i] > maxVal) {
+            maxVal = a[i]; // Находим максимальный элемент
         }
     }
-    return c; 
+    return maxVal; // Возвращаем максимальное значение
 }
 
 template<class B>
 int PatArr<B>::Min() {
-    // Инициализируем переменные для хранения индекса минимального значения
-    int c = 0, tmp = 9999;
-    if (a.empty()) throw std::runtime_error("Массив пуст");
-    for (int i = 0; i < n; i++) {
-        if (a[i] < tmp) {
-            tmp = a[i];
-            c = i;
+    if (n == 0) throw std::runtime_error("Массив пуст"); // Проверяем, не пуст ли массив
+
+    B minVal = a[0]; // Инициализируем минимальное значение первым элементом
+    for (int i = 1; i < n; i++) {
+        if (a[i] < minVal) {
+            minVal = a[i]; // Находим минимальный элемент
         }
     }
-    return c; 
+    return minVal; // Возвращаем минимальное значение
 }
 
 template<class B>
