@@ -12,7 +12,7 @@ int main()
     int m, m2, k;
     cout << "Введите размер 1-го массива: ";
     cin >> m; // Получаем размер от пользователя
-    a.Scan(m); 
+    a.Scan(m);
     cout << "Ваш массив (a):\n";
     a.Print(m); // Печатаем массив
 
@@ -71,5 +71,5 @@ int main()
     else
         cout << "Массивы a и b не равны.\n";
 
-    return 0; 
+    return 0;
 }

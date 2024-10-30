@@ -1,4 +1,3 @@
-#pragma once
 
 #ifndef PATARR_H
 #define PATARR_H
@@ -17,9 +16,9 @@ public:
     PatArr(); // Конструктор по умолчанию
     PatArr(int N); // Конструктор с параметром для задания размера
     PatArr(const PatArr& x); // Конструктор копирования
-    PatArr (PatArr* b, int n); //конструктор с аргументом(n - число эл - тов в b)
+    PatArr(PatArr* b, int n); //конструктор с аргументом(n - число эл - тов в b)
     // Деструктор
-    ~PatArr(); 
+    ~PatArr();
 
     // Члены класса
     int Size(); // Устанавливает и возвращает новый размер массива
@@ -71,19 +70,19 @@ public:
 // Реализацию методов
 template <class B>
 PatArr<B>::PatArr() {
-    n = 10; 
+    n = 10;
     a = new B[n]; // Выделяем память для массива
     for (int i = 0; i < n; i++) {
-        a[i] = 0; 
+        a[i] = 0;
     }
 }
 
 template <class B>
 PatArr<B>::PatArr(int N) {
-    n = N; 
+    n = N;
     a = new B[n]; // Выделяем память для массива
     for (int i = 0; i < n; i++) {
-        a[i] = 0; 
+        a[i] = 0;
     }
 }
 
@@ -97,21 +96,19 @@ PatArr<B>::PatArr(const PatArr& x) {
 }
 
 template<class B>
-PatArr<B>::PatArr(PatArr* b, int n)
-{
+PatArr<B>::PatArr(PatArr* b, int n) {
     if (b == nullptr || n <= 0) {
         throw std::invalid_argument("Указатель на массив не должен быть нулевым, и размер должен быть положительным.");
     }
 
-    // Устанавливаем размер вектора на n
-    a.resize(n);
+    this->n = n; // Устанавливаем размер массива
+    a = new B[n]; // Выделяем память для нового массива
 
     // Копируем элементы из переданного массива
     for (int i = 0; i < n; ++i) {
         a[i] = b->Get(i); // Используем метод Get для доступа к элементам
     }
 }
-
 template <class B>
 PatArr<B>::~PatArr() {
     delete[] a; // Освобождаем память, занятую массивом
@@ -130,7 +127,7 @@ int PatArr<B>::CheckSize() const {
 
 template <class B>
 void PatArr<B>::Scan(int m) {
-    std::cout << "Введите массив :" << std::endl; 
+    std::cout << "Введите массив :" << std::endl;
     for (int i = 0; i < m; i++) {
         std::cin >> a[i];
     }
@@ -141,7 +138,7 @@ void PatArr<B>::Print(int m) const {
     for (int i = 0; i < m; i++) {
         std::cout << "[" << a[i] << "]";
     }
-    std::cout << std::endl << std::endl; 
+    std::cout << std::endl << std::endl;
 }
 
 
@@ -154,45 +151,26 @@ int PatArr<B>::Findkey(B key)
         // Проверяем, равен ли текущий элемент искомому
         if (a[i] == key)
         {
-            std::cout << "Элемент находится на " << i << "-ой позиции" << std::endl;
             return i;
         }
     }
-    std::cout << "В массиве отсутствует данный элемент" << std::endl; 
     return -1; // Возвращаем -1, если элемент не найден
 }
 
 template <class B>
 PatArr<B> PatArr<B>::operator+(B key) {
-    // Создаем временный массив для нового размера
-    int* r = new int[n + 1];
+    PatArr<B> result(n + 1); // Новый массив на 1 элемент больше
     for (int i = 0; i < n; i++) {
-        r[i] = a[i]; // Копируем существующие элементы в новый массив
+        result.a[i] = a[i]; // Копируем существующие элементы
     }
-    r[n] = key; // Добавляем новый элемент в конец массива
-    n++; 
-
-    PatArr b(n); // Создаем новый объект PatArr
-    for (int i = 0; i < n; i++) {
-        b.a[i] = r[i]; // Копируем элементы из временного массива в новый объект
-    }
-    delete[] r; 
-    return b; 
+    result.a[n] = key; // Добавляем новый элемент в конец массива
+    return result;
 }
 
 template <class B>
 PatArr<B>& PatArr<B>::operator+=(B key) {
-    // Создаем временный массив для нового размера
-    int* r = new int[n + 1];
-    for (int i = 0; i < n; i++) {
-        r[i] = a[i]; // Копируем существующие элементы в новый массив
-    }
-    r[n] = key; // Добавляем новый элемент в конец массива
-
-    delete[] a; 
-    a = r; 
-    n += 1;
-
+    PatArr<B> result = *this + key; // Используем оператор + для добавления
+    *this = result; // Присваиваем результат
     return *this;
 }
 
@@ -202,7 +180,7 @@ PatArr<B>& PatArr<B>::operator=(const PatArr<B>& x) {
     if (this != &x) {
         delete[] a;
         n = x.n; // Копируем количество элементов
-        a = new B[n]; 
+        a = new B[n];
         for (int i = 0; i < n; i++) {
             a[i] = x.a[i]; // Копируем элементы из другого массива
         }
@@ -223,8 +201,8 @@ PatArr<B>& PatArr<B>::operator+=(PatArr<B> x) {
 
     delete[] a;
     a = r; // Перенаправляем указатель на новый массив
-    n += x.n; 
-    return *this; 
+    n += x.n;
+    return *this;
 }
 
 template <class B>
@@ -243,8 +221,8 @@ PatArr<B> PatArr<B>::operator+(PatArr<B> x) {
     for (int i = 0; i < n2; i++) {
         b.a[i] = r[i]; // Копируем элементы из временного массива в новый объект
     }
-    delete[] r; 
-    return b; 
+    delete[] r;
+    return b;
 }
 
 template <class B>
@@ -256,38 +234,36 @@ PatArr<B>& PatArr<B>::operator-=(B key) {
             r[j++] = a[i];
         }
     }
-    delete[] a; 
+    delete[] a;
     a = r; // Указываем на новый массив
     n = j; // Обновляем размер массива
 
-    return *this; 
+    return *this;
 }
 
 template <class B>
 PatArr<B> PatArr<B>::operator-(B key) {
-    int* r = new int[n - 1]; // Создаем новый временный массив
+    int newSize = 0;
+    for (int i = 0; i < n; i++) {
+        if (a[i] != key) newSize++;
+    }
+
+    PatArr<B> result(newSize); // Новый массив с уменьшенным размером
     int j = 0;
     for (int i = 0; i < n; i++) {
-        if (a[i] != key) { // Если элемент не равен key, добавляем его в новый массив
-            r[j++] = a[i];
+        if (a[i] != key) {
+            result.a[j++] = a[i]; // Копируем элементы, не равные key
         }
     }
-
-    PatArr b(n - 1); // Создаем новый объект массива с уменьшенным размером
-    for (int i = 0; i < n - 1; i++) {
-        b.a[i] = r[i]; // Копируем элементы во вновь созданный массив
-    }
-    delete[] r; 
-    return b;
+    return result;
 }
-
 template <class B>
 PatArr<B>& PatArr<B>::DelPosEq(int pos) {
     if (pos < 0 || pos >= n) {
         return *this; // Если индекс некорректен, возвращаем текущий объект
     }
 
-    int* r = new int[n - 1]; 
+    int* r = new int[n - 1];
     for (int i = 0; i < pos; i++) {
         r[i] = a[i]; // Копируем элементы до позиции удаления
     }
@@ -297,9 +273,9 @@ PatArr<B>& PatArr<B>::DelPosEq(int pos) {
 
     delete[] a;
     a = r; // Указываем на новый массив
-    n--; 
+    n--;
 
-    return *this; 
+    return *this;
 }
 
 template <class B>
@@ -320,21 +296,20 @@ PatArr<B> PatArr<B>::DelPosNew(int pos) {
     for (int i = 0; i < n - 1; i++) {
         b.a[i] = r[i]; // Копируем элементы в новый массив
     }
-    delete[] r; 
-    return b; 
+    delete[] r;
+    return b;
 }
 
 template <class B>
 bool PatArr<B>::operator==(PatArr<B> x) const {
     if (n != x.n) { // Сравниваем размеры массивов
-        return false; 
+        return false;
     }
     for (int i = 0; i < n; i++) {
         if (a[i] != x.a[i]) { // Сравниваем элементы массивов
-            return false; 
+            return false;
         }
     }
-    std::cout << "Массивы равны" << std::endl; 
     return true; // Если все элементы равны, массивы равны
 }
 
@@ -373,20 +348,12 @@ int PatArr<B>::Min() {
 template<class B>
 void PatArr<B>::Sorting() {
     // Сортировка массива методом пузырька 
-    int tmp;
-    for (int i = 0; i < n; i++) {
-        tmp = a[i];
-        for (int j = i; j < n; j++)
-            if (tmp > a[j]) {
-                // Обмен элементов
-                tmp = a[j];
-                a[j] = a[i];
-                a[i] = tmp;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                std::swap(a[j], a[j + 1]); // Обмен элементов
             }
-    }
-    // Выводим отсортированный массив
-    for (int i = 0; i < n; i++) {
-        std::cout << "[" << a[i] << "]";
+        }
     }
 }
 
@@ -394,18 +361,15 @@ template <class B>
 B PatArr<B>::operator[](int index) const {
     // Проверка на выход за границы массива
     if (index < 0 || index >= n) {
-        std::cout << "Ошибка: индекс за пределами диапазона!" << std::endl;
-        return 0; // Или выбросить исключение
+        throw std::out_of_range("Индекс за пределами диапазона!"); // Выбрасываем исключение
     }
     return a[index];
 }
-
 template <class B>
 B PatArr<B>::Get(int index) const {
     // Проверка на выход за границы массива
     if (index < 0 || index >= n) {
-        std::cout << "Ошибка: индекс за пределами диапазона!" << std::endl;
-        return 0; 
+        throw std::out_of_range("Ошибка: индекс за пределами диапазона!");
     }
     return a[index];
 }
