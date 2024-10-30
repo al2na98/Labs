@@ -1,22 +1,22 @@
 #pragma once
 class Node
 {
-		int key;                       //ключ
-		Node* prev, * next;     //адреса предыдущего и следующего узлов 
-	public:
-		Node() 
-		{ 
-			key = 0;
-			prev = nullptr;
-			next = nullptr;
-		} //конструктор по умолчанию
-		Node(int k, Node* pr, Node* nxt)         //конструктор с аргументами
-		{
-			key = k; prev = pr; next = nxt;
-		}
-		int Key() { return key; }
-		//для возврата адресов prev и next
-		friend class List;
+	int key;                       //ключ
+	Node* prev, * next;     //адреса предыдущего и следующего узлов 
+public:
+	Node()
+	{
+		key = 0;
+		prev = nullptr;
+		next = nullptr;
+	} //конструктор по умолчанию
+	Node(int k, Node* pr, Node* nxt)         //конструктор с аргументами
+	{
+		key = k; prev = pr; next = nxt;
+	}
+	int Key() { return key; }
+	//для возврата адресов prev и next
+	friend class List;
 };
 class List
 {
@@ -30,8 +30,7 @@ public:
 	//формирование списка из n узлов с ключами – элементами массива а 
 	List(int* a, int n);
 	List(List& s);			//конструктор копирования
-   //деструктор; Clear – очистка списка
-	~List();
+	~List();  //деструктор
 	List& operator= (List& s);    //инициация списка
 	void AddAfter(Node* p, int x);  //добавление узла после заданного
 	void AddToTail(int x);     //добавление элемента в хвост
@@ -50,8 +49,8 @@ public:
 	Node* Min();				//нахождение min эл-та списка
 	void Scan(int n);			          //ввод списка из n элементов
 	void Print();				//печать списка
-	friend ostream& operator << (ostream& r, List& X);
-	friend istream& operator >> (istream& r, List& X);
+	friend std::ostream& operator << (std::ostream& r, List& X);
+	friend std::istream& operator >> (std::istream& r, List& X);
 };
 
 

@@ -1,68 +1,71 @@
 #include "Node.h"
 #include <stdlib.h>
 #include <iostream>
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
+
 List::List()
 {
-	head = new Node;
-	tail = new Node(-1, head, 0);
-	head->next = tail;
+    head = new Node;
+    tail = new Node(-1, head, 0);
+    head->next = tail;
     head->prev = nullptr;
- }
+}
 List::List(int n)
 {
-	head = new Node;
-	tail = new Node(-1, head, 0);
-	head->next = tail;
+    head = new Node;
+    tail = new Node(-1, head, 0);
+    head->next = tail;
     head->prev = nullptr;
-	for (int i = 0; i <= n; i++)
-	{
-		int x = rand() % 100;
-		AddToTail(x);
-	}
+    for (int i = 0; i <= n; i++)
+    {
+        int x = rand() % 100;
+        AddToTail(x);
+    }
 }
 List::List(int* a, int n)
 {
-	head = new  Node;
-	tail = new  Node(-1, head, 0);
-	head->next = tail;
-	for (int i = 0; i < n; i++)
-	{
-		AddToTail(a[i]);
-	}
+    head = new  Node;
+    tail = new  Node(-1, head, 0);
+    head->next = tail;
+    for (int i = 0; i < n; i++)
+    {
+        AddToTail(a[i]);
+    }
 }
 List::~List()
 {
-	Clear();
-	delete head;
-	delete tail;
+    Clear();
+    delete head;
+    delete tail;
 }
 List::List(List& s)
 {
-	head = new  Node;
-	tail = new  Node(-1, head, 0);
-	head->next = tail;
+    head = new  Node;
+    tail = new  Node(-1, head, 0);
+    head->next = tail;
     head->prev = nullptr;
-	Node* q = s.head->next;
-	while (q != s.tail)
-	{
-		AddToTail(q->key);
-		q = q->next;
-	}
+    Node* q = s.head->next;
+    while (q != s.tail)
+    {
+        AddToTail(q->key);
+        q = q->next;
+    }
 }
 List& List::operator= (List& s)
 {
-	if (this != &s)
-	{
-		Clear();
-		Node* q = s.head->next;
-		while (q != s.tail) 
-		{
-			AddToTail(q->key); 
-			q = q->next;
-		}
-	}
-	return *this;
+    if (this != &s)
+    {
+        Clear();
+        Node* q = s.head->next;
+        while (q != s.tail)
+        {
+            AddToTail(q->key);
+            q = q->next;
+        }
+    }
+    return *this;
 }
 
 // Метод очистки списка
@@ -74,7 +77,7 @@ void List::Clear() {
 
 // Проверка пустоты списка
 bool List::Empty() {
-    return head == nullptr; // Если голова равна nullptr, список пуст
+    return head->next == tail; // Если голова указывает на tail, список пуст
 }
 
 // Добавление узла в хвост
@@ -99,7 +102,8 @@ void List::AddToHead(int x) {
     head = newNode; // Обновляем голову
 }
 void List::AddAfter(Node* p, int x) {
-    if (p == nullptr || p == tail) return; // Если узел пуст или это tail, ничего не делаем
+    if (p == nullptr || p == tail)
+        throw std::invalid_argument("Invalid node for insertion.");
     Node* newNode = new Node(x, p, p->next); // Создаем новый узел
     p->next->prev = newNode; // Связываем следующий узел с новым
     p->next = newNode; // Обновляем next для узла p
@@ -123,7 +127,8 @@ void List::AddToHead(const List& other) {
 
 // Удаление узла по указателю
 void List::Del(Node* p) {
-    if (p == nullptr) return; // Если узел пуст, ничего не делаем
+    if (p == nullptr)
+        throw std::invalid_argument("Невозможно удалить нулевой узел.");
     if (p->prev) {
         p->prev->next = p->next; // Связываем предыдущий узел с следующим
     }
@@ -141,35 +146,41 @@ void List::Del(Node* p) {
 
 // Удаление элемента с хвоста
 void List::DelTail() {
-    if (tail) {
-        Del(tail); // Удаляем хвост
+    if (tail->prev != nullptr) {
+        Del(tail->prev); // Удаляем хвост
+    }
+    else {
+        throw std::out_of_range("Невозможно удалить хвост из пустого списка.");
     }
 }
 
 // Удаление элемента с головы
 void List::DelHead() {
-    if (head) {
-        Del(head); // Удаляем голову
+    if (head->next != tail) {
+        Del(head->next); // Удаляем голову
+    }
+    else {
+        throw std::out_of_range("Невозможно удалить голову из пустого списка.");
     }
 }
 
 // Поиск узла по ключу
 Node* List::FindKey(int key) {
-    Node* current = head;
-    while (current != nullptr) {
+    Node* current = head->next; // Начинаем с первого узла
+    while (current != tail) {
         if (current->Key() == key) {
             return current; // Возвращаем узел, если найден
         }
-        current = current->next;
+        current = current->next; // Переход к следующему узлу
     }
     return nullptr; // Если не найден, возвращаем nullptr
 }
 
 // Поиск узла по позиции
 Node* List::FindPos(int pos) {
-    Node* current = head;
+    Node* current = head->next;
     int index = 0;
-    while (current != nullptr) {
+    while (current != tail) {
         if (index == pos) {
             return current; // Возвращаем узел по позиции
         }
@@ -181,10 +192,11 @@ Node* List::FindPos(int pos) {
 
 // Нахождение максимального элемента списка
 Node* List::Max() {
-    if (Empty()) return nullptr; // Если список пуст, возвращаем nullptr
+    if (Empty())
+        throw std::runtime_error("Невозможно найти макс в пустом списке.");
     Node* current = head;
-    Node* maxNode = head;
-    while (current != nullptr) {
+    Node* maxNode = current;
+    while (current != tail) {
         if (current->Key() > maxNode->Key()) {
             maxNode = current; // Обновляем максимальный узел
         }
@@ -195,10 +207,11 @@ Node* List::Max() {
 
 // Нахождение минимального элемента списка
 Node* List::Min() {
-    if (Empty()) return nullptr; // Если список пуст, возвращаем nullptr
+    if (Empty())
+        throw std::runtime_error("Невозможно найти мин в пустом списке.");
     Node* current = head;
-    Node* minNode = head;
-    while (current != nullptr) {
+    Node* minNode = current;
+    while (current != tail) {
         if (current->Key() < minNode->Key()) {
             minNode = current; // Обновляем минимальный узел
         }
@@ -234,14 +247,14 @@ void List::Scan(int n) {
 
 // Печать списка
 void List::Print() {
-    Node* current = head;
+    Node* current = head->next;
     while (current != nullptr) {
         std::cout << current->Key() << " "; // Вывод ключа узла
         current = current->next; // Переход к следующему узлу
     }
     std::cout << std::endl; // Переход на новую строку
 }
- //Оператор вывода
+//Оператор вывода
 std::ostream& operator<<(std::ostream& r, List& X) {
     X.Print(); // Используем метод Print для вывода
     return r;
