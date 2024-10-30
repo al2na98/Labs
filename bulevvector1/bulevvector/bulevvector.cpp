@@ -16,8 +16,8 @@ int main()
     boolvector b1, b2(10), b3(s), b4(s, 10), b5(s, 16), b6 = b5;
     // Вывод начальных состояний векторов
     cout << "Состояние векторов:" << endl;
-    b1.Print(); 
-    b2.Print(); 
+    b1.Print();
+    b2.Print();
     cout << "111011101110" << endl;
     b3.Print();
     b4.Print();

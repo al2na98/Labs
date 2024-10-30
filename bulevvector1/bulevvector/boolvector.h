@@ -5,16 +5,18 @@
 #include <locale.h> 
 #include <string.h> 
 #include <iostream> 
-using namespace std; 
+using namespace std;
 typedef unsigned char UC;
 
 class boolvector
 {
-    UC* bv; 
-    int n; 
-    int m; 
+    UC* bv;
+    int n;
+    int m;
+    int Input(char* s, int i_bv, int i_s, int k); // Метод для ввода данных в вектор
+    void Output(int i_bv, int k); // Метод для вывода данных вектора
 public:
-    
+
     // Конструкторы
     boolvector(); // Конструктор по умолчанию
     boolvector(int N); // Конструктор с заданной длиной вектора
@@ -24,8 +26,6 @@ public:
     ~boolvector(); // Деструктор для освобождения ресурсов
 
     // Методы
-    int Input(char* s, int i_bv, int i_s, int k); // Метод для ввода данных в вектор
-    void Output(int i_bv, int k); // Метод для вывода данных вектора
     void Print(); // Метод для печати вектора
     void Scan(int N); // Метод для сканирования данных
     int Weight(); // Метод для подсчета количества единиц в векторе
@@ -48,11 +48,10 @@ public:
     boolvector operator ~ (); // Перегрузка оператора побитового отрицания (инверсии)
     boolvector& setup1(int k); // Установка бита в 1 по индексу k
     boolvector& setup0(int k); // Установка бита в 0 по индексу k
-    boolvector& setup1(int k, int p); // Установка нескольких битов в 1, начиная с индекса k
-    boolvector& setup0(int k, int p); // Установка нескольких битов в 0, начиная с индекса k
+    boolvector& setup(int k, int p); // Установка нескольких битов, начиная с индекса k
     boolvector& inversion(int k); // Инверсия бита по индексу k
     boolvector& inversion(int k, int p); // Инверсия битов в диапазоне от k до k + p
     friend ostream& operator << (ostream& r, boolvector& x);
-    friend istream& operator >> (istream& r, boolvector& x); 
+    friend istream& operator >> (istream& r, boolvector& x);
 };
 
