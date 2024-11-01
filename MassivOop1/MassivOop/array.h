@@ -1,3 +1,5 @@
+#include <istream>
+#include <ostream>
 #pragma once
 
 class array
@@ -54,6 +56,7 @@ public:
 	array& operator-(int key);
 
 	friend std::ostream& operator<<(std::ostream& r, const array& other);
+
 	friend std::istream& operator>>(std::istream& r, array& other);
 };
 

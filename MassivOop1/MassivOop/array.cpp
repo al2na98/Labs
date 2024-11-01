@@ -55,6 +55,7 @@ array& array::operator=(const array& other)
 
 void array::set(int size)
 {
+    srand(time(0));
     for (int i = 0; i < size; i++)
     {
         arr[i] = 1 + rand() % 100;
@@ -230,6 +231,10 @@ array& array::operator-(int key)
     return result; 
 }
 std::ostream& operator<<(std::ostream& r, const array& other) {
+    if (other.arr == nullptr) {
+        r << "Массив не инициализирован.";
+        return r;
+    }
     for (int i = 0; i < other.size; i++) {
         r << other.arr[i] << " ";
     }
